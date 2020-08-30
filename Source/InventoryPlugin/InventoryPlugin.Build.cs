@@ -36,7 +36,8 @@ public class InventoryPlugin : ModuleRules
 			{
                 "CoreUObject",
 				"Engine",
-				"Slate",
+                "UMG",
+                "Slate",
 				"SlateCore",
 				// ... add private dependencies that you statically link with here ...	
 			}

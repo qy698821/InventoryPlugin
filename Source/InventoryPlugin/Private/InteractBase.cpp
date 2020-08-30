@@ -2,6 +2,7 @@
 
 
 #include "InteractBase.h"
+#include "InventoryComponent.h"
 #include "InventoryActor.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
@@ -36,16 +37,24 @@ void AInteractBase::Tick(float DeltaTime)
 
 void AInteractBase::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int OtherBodyIndex, bool FromSweep, const FHitResult & SweepResult)
 {
-	TArray<AActor* > OutArray;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AInventoryActor::StaticClass(), OutArray);
-	int a = 1;
+	UInventoryComponent* ComponentPtr = Cast<UInventoryComponent>(OtherComp);
+	if (ComponentPtr) 
+	{
+		ComponentPtr->InventoryPtr->CurrentInteractActor = this;
+	}
 }
 
 void AInteractBase::EndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int OtherBodyIndex)
 {
+	UInventoryComponent* ComponentPtr = Cast<UInventoryComponent>(OtherComp);
+	if (ComponentPtr)
+	{
+		ComponentPtr->InventoryPtr->CurrentInteractActor = nullptr;
+	}
 }
 
 void AInteractBase::ObjectInteract(APlayerController * Controller)
 {
+
 }
 

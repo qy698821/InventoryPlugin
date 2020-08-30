@@ -2,6 +2,8 @@
 
 
 #include "InventoryActor.h"
+#include "InGameWidget.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 //#include "UObject/ConstructorHelpers.h" 
 
@@ -17,16 +19,25 @@ AInventoryActor::AInventoryActor()
 		InventoryTable = LoadObject<UDataTable>(NULL, UTF8_TO_TCHAR("DataTable'/InventoryPlugin/Data/InventoryDataTable/ItemTable.ItemTable'"));
 	}
 	InitInventory();
-	InventoryCollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("InventoryCollisionComponent"));
-	InventoryCollisionComponent->SetSphereRadius(50.0f);
 
+	//!InGameWB = LoadObject<UInGameWidget>(NULL, UTF8_TO_TCHAR("InGameWidget'/InventoryPlugin/UI/WB_InGame.WB_InGame'"));
+	APlayerController* Ptr1 = UGameplayStatics::GetPlayerController(GWorld, 0);
+	TSubclassOf<UInGameWidget> WidgetClass = LoadClass<UInGameWidget>(this, TEXT("/InventoryPlugin/UI/WB_InGame.WB_InGame_C"));
+	if (WidgetClass && Ptr1)
+	{
+		InGameWB = CreateWidget<UInGameWidget>(Ptr1->GetWorld(), WidgetClass);
+	}
+	if (InGameWB != nullptr)
+	{
+		InGameWB->InventoryPtrInGame = this;
+		InGameWB->AddToViewport();
+	}
 }
 
 // Called when the game starts or when spawned
 void AInventoryActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -74,10 +85,5 @@ void AInventoryActor::InitInventory()
 TArray< FInventoryItem > AInventoryActor::GetInventoryByType( EInventoryItemType InventoryType )
 {
 	return InventoryMap[InventoryType];
-}
-
-void AInventoryActor::AttachComponentToPlayer(ACharacter * CharacterPtr)
-{
-	InventoryCollisionComponent->SetupAttachment(CharacterPtr->GetRootComponent());
 }
 

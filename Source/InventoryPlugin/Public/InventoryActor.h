@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Engine/DataTable.h"
 #include "PickUp.h"
-#include "Components/SphereComponent.h"
 #include "Engine/DataTable.h"
 #include "InventoryActor.generated.h"
 
@@ -82,18 +81,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		USphereComponent* InventoryCollisionComponent;
-
 	//Inventory map
 	TMap< EInventoryItemType, TArray< FInventoryItem > > InventoryMap;
 
 	void InitInventory();
 
 	UFUNCTION(BlueprintCallable)
-		TArray< FInventoryItem > GetInventoryByType( EInventoryItemType InventoryType);
+		TArray< FInventoryItem > GetInventoryByType(EInventoryItemType InventoryType);
 
-	void AttachComponentToPlayer(ACharacter* CharacterPtr);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		class AInteractBase* CurrentInteractActor = nullptr;
+
+	//UI
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UInGameWidget* InGameWB;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

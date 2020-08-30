@@ -17,6 +17,12 @@ public:
 	// Sets default values for this actor's properties
 	AInteractBase();
 
+	UFUNCTION(BlueprintCallable)
+	FString GetText() const
+	{
+		return FString::Printf(TEXT(". %s : °´E¼ü%s"), *Name, *Action);
+	}
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
