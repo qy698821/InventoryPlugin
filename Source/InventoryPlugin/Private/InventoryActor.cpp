@@ -3,6 +3,7 @@
 
 #include "InventoryActor.h"
 #include "InGameWidget.h"
+#include "InventoryWidget.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 //#include "UObject/ConstructorHelpers.h" 
@@ -23,14 +24,23 @@ AInventoryActor::AInventoryActor()
 	//!InGameWB = LoadObject<UInGameWidget>(NULL, UTF8_TO_TCHAR("InGameWidget'/InventoryPlugin/UI/WB_InGame.WB_InGame'"));
 	APlayerController* Ptr1 = UGameplayStatics::GetPlayerController(GWorld, 0);
 	TSubclassOf<UInGameWidget> WidgetClass = LoadClass<UInGameWidget>(this, TEXT("/InventoryPlugin/UI/WB_InGame.WB_InGame_C"));
+	TSubclassOf<UInventoryWidget> InventoryWBClass = LoadClass<UInventoryWidget>(this, TEXT("/InventoryPlugin/UI/WB_Inventory.WB_Inventory_C"));
 	if (WidgetClass && Ptr1)
 	{
 		InGameWB = CreateWidget<UInGameWidget>(Ptr1->GetWorld(), WidgetClass);
+	}
+	if (InventoryWBClass && Ptr1) 
+	{
+		InventoryWB = CreateWidget<UInventoryWidget>(Ptr1->GetWorld(), InventoryWBClass);
 	}
 	if (InGameWB != nullptr)
 	{
 		InGameWB->InventoryPtrInGame = this;
 		InGameWB->AddToViewport();
+	}
+	if (InventoryWB) 
+	{
+		InventoryWB->InventoryPtrInGame = this;
 	}
 }
 
@@ -70,7 +80,7 @@ void AInventoryActor::InitInventory()
 			FInventoryItem* ItemToAdd4 = InventoryTable->FindRow<FInventoryItem>("4", "");
 			if (ItemToAdd1 && ItemToAdd2 && ItemToAdd3 && ItemToAdd4)
 			{
-				for (int i = 0; i < 32; ++i)
+				for (int i = 0; i < 8; ++i)
 				{
 					InventoryMap[EInventoryItemType::EQUIPMENTS].Add(*ItemToAdd1);
 					InventoryMap[EInventoryItemType::CONSUMABLES].Add(*ItemToAdd2);
@@ -85,5 +95,94 @@ void AInventoryActor::InitInventory()
 TArray< FInventoryItem > AInventoryActor::GetInventoryByType( EInventoryItemType InventoryType )
 {
 	return InventoryMap[InventoryType];
+}
+
+void AInventoryActor::ObjectInteract()
+{
+	if(CurrentInteractActor)
+	{
+		CurrentInteractActor->ObjectInteract(this);
+	}
+}
+
+void AInventoryActor::AddInventoryItemByID(FName ID)
+{
+	//if already has item , add it's number
+	if (CheckIDHave(ID)) 
+	{
+		return;
+	}
+	FInventoryItem* ItemToAdd = InventoryTable->FindRow<FInventoryItem>(ID, "");
+	if (ItemToAdd) 
+	{
+		AddInventoryObjeck(ItemToAdd);
+	}
+
+}
+
+bool AInventoryActor::CheckIDHave(FName ID)
+{
+	FInventoryItem* ItemToFind = InventoryTable->FindRow<FInventoryItem>(ID, "");
+	if (ItemToFind) 
+	{
+		for (auto& n : InventoryMap[ItemToFind->Type])
+		{
+			if (n.ItemID == ID)
+			{
+				n.Number++;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void AInventoryActor::AddInventoryObjeck(FInventoryItem * Item)
+{
+	FName ID = "";
+	switch (Item->Type) 
+	{
+		case EInventoryItemType::EQUIPMENTS:
+			ID = "1";
+			break;
+		case EInventoryItemType::CONSUMABLES:
+			ID = "2";
+			break;
+		case EInventoryItemType::QUESTITEMS:
+			ID = "3";
+			break;
+		case EInventoryItemType::OTHERS:
+			ID = "4";
+			break;
+	}
+	for (int i = 0; i < InventoryMap[Item->Type].Num(); ++i) 
+	{
+		if (InventoryMap[Item->Type][i].ItemID == ID) 
+		{
+			InventoryMap[Item->Type].RemoveAt(i);
+			InventoryMap[Item->Type].Insert(*Item, i);
+			return;
+		}
+	}
+}
+
+void AInventoryActor::OpenInventory()
+{
+	if (InventoryWB->IsInViewport())
+	{
+		return;
+	}
+	InventoryWB->AddToViewport();
+	isInventoryOpen = true;
+}
+
+void AInventoryActor::CloseInventory()
+{
+	if (!InventoryWB->IsInViewport()) 
+	{
+		return;
+	}
+	InventoryWB->RemoveFromParent();
+	isInventoryOpen = false;
 }
 

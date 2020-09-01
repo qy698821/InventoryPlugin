@@ -89,12 +89,38 @@ public:
 	UFUNCTION(BlueprintCallable)
 		TArray< FInventoryItem > GetInventoryByType(EInventoryItemType InventoryType);
 
+	//Object interact(pick up and so on)
+	UFUNCTION(BlueprintCallable)
+		void ObjectInteract();
+
+	UFUNCTION(BlueprintCallable)
+		void AddInventoryItemByID(FName ID);
+
+	UFUNCTION(BlueprintCallable)
+		bool CheckIDHave(FName ID);
+
+	void AddInventoryObjeck(FInventoryItem* Item);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		class AInteractBase* CurrentInteractActor = nullptr;
 
 	//UI
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UInGameWidget* InGameWB;
+
+	//UI Inventory
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UInventoryWidget* InventoryWB;
+
+	//Open and Close the inventory UI
+	UFUNCTION(BlueprintCallable)
+		void OpenInventory();
+
+	UFUNCTION(BlueprintCallable)
+		void CloseInventory();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool isInventoryOpen;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

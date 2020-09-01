@@ -20,7 +20,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FString GetText() const
 	{
-		return FString::Printf(TEXT(". %s : °´E¼ü%s"), *Name, *Action);
+		return FString::Printf(TEXT(". %s : Press E to %s"), *Name, *Action);
 	}
 
 protected:
@@ -53,7 +53,7 @@ public:
 		virtual void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int OtherBodyIndex);
 
 	//Event Interact
-	virtual void ObjectInteract(APlayerController* Controller);
+	virtual void ObjectInteract(AInventoryActor* InventoryActor);
 
 
 

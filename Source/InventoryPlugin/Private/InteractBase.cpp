@@ -53,7 +53,7 @@ void AInteractBase::EndOverlap(UPrimitiveComponent * OverlappedComponent, AActor
 	}
 }
 
-void AInteractBase::ObjectInteract(APlayerController * Controller)
+void AInteractBase::ObjectInteract(AInventoryActor* InventoryActor)
 {
 
 }

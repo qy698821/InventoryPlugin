@@ -2,4 +2,13 @@
 
 
 #include "PickUp.h"
+#include "InventoryActor.h"
 
+void APickUp::ObjectInteract(AInventoryActor* InventoryActor) 
+{
+	if (InventoryActor) 
+	{
+		InventoryActor->AddInventoryItemByID(ID);
+		this->Destroy();
+	}
+}

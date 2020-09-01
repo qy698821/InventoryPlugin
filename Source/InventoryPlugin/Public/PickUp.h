@@ -14,4 +14,6 @@ class INVENTORYPLUGIN_API APickUp : public AInteractBase
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void ObjectInteract(AInventoryActor* InventoryActor) override;
 };
