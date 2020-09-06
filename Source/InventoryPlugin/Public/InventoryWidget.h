@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InventoryActor.h"
 #include "Blueprint/UserWidget.h"
 #include "InventoryWidget.generated.h"
 
@@ -18,4 +19,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class AInventoryActor* InventoryPtrInGame;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EInventoryItemType LastLoadType = EInventoryItemType::EQUIPMENTS;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void LoadInventory();
 };
