@@ -80,7 +80,7 @@ void AInventoryActor::InitInventory()
 			FInventoryItem* ItemToAdd4 = InventoryTable->FindRow<FInventoryItem>("4", "");
 			if (ItemToAdd1 && ItemToAdd2 && ItemToAdd3 && ItemToAdd4)
 			{
-				for (int i = 0; i < 8; ++i)
+				for (int i = 0; i < 48; ++i)
 				{
 					InventoryMap[EInventoryItemType::EQUIPMENTS].Add(*ItemToAdd1);
 					InventoryMap[EInventoryItemType::CONSUMABLES].Add(*ItemToAdd2);
