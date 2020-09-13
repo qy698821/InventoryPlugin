@@ -186,3 +186,15 @@ void AInventoryActor::CloseInventory()
 	isInventoryOpen = false;
 }
 
+void AInventoryActor::InventoryOpenAndClose()
+{
+	if (isInventoryOpen) 
+	{
+		CloseInventory();
+	}
+	else 
+	{
+		OpenInventory();
+	}
+}
+

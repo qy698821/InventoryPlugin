@@ -119,6 +119,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void CloseInventory();
 
+	UFUNCTION(BlueprintCallable)
+		void InventoryOpenAndClose();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool isInventoryOpen;
 
