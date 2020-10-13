@@ -198,3 +198,12 @@ void AInventoryActor::InventoryOpenAndClose()
 	}
 }
 
+void AInventoryActor::SwapItemByIndex(int index1, FInventoryItem item1, int index2, FInventoryItem item2)
+{
+	EInventoryItemType Type = item1.Type;
+	InventoryMap[Type].RemoveAt(index1);
+	InventoryMap[Type].Insert(item2, index1);
+	InventoryMap[Type].RemoveAt(index2);
+	InventoryMap[Type].Insert(item1, index2);
+}
+

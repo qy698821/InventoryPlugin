@@ -125,6 +125,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool isInventoryOpen;
 
+	//Swap the item
+	UFUNCTION(BlueprintCallable)
+		void SwapItemByIndex(int index1, FInventoryItem item1, int index2, FInventoryItem item2);
+
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 		UDataTable* InventoryTable;
