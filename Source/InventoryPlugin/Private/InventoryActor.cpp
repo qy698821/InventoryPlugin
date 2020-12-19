@@ -207,3 +207,54 @@ void AInventoryActor::SwapItemByIndex(int index1, FInventoryItem item1, int inde
 	InventoryMap[Type].Insert(item1, index2);
 }
 
+void AInventoryActor::SortInventory() 
+{
+	TArray< EInventoryItemType> Types;
+	TArray< FName> IDs = { TEXT("1"),TEXT("2"),TEXT("3"),TEXT("4") };
+	FName ID;
+	InventoryMap.GetKeys(Types);
+	for (int i = 0; i < Types.Num(); ++i) 
+	{
+		TArray< FInventoryItem> Items;
+		// Record all items
+		for (int j = 0; j < InventoryMap[Types[i]].Num(); ++j) 
+		{
+			if (IDs.Contains(InventoryMap[Types[i]][j].ItemID)) 
+			{
+				continue;
+			}
+			else 
+			{
+				Items.Add(InventoryMap[Types[i]][j]);
+			}
+		}
+		// Empty all Items
+		InventoryMap[Types[i]].Empty();
+		for (int j = 0; j < Items.Num(); ++j) 
+		{
+			InventoryMap[Types[i]].Add(Items[j]);
+		}
+		switch (Types[i])
+		{
+			case EInventoryItemType::EQUIPMENTS:
+				ID = "1";
+				break;
+			case EInventoryItemType::CONSUMABLES:
+				ID = "2";
+				break;
+			case EInventoryItemType::QUESTITEMS:
+				ID = "3";
+				break;
+			case EInventoryItemType::OTHERS:
+				ID = "4";
+				break;
+		}
+		FInventoryItem* NoneItemToAdd = InventoryTable->FindRow<FInventoryItem>(ID, "");
+		while (InventoryMap[Types[i]].Num() < 48) 
+		{
+			InventoryMap[Types[i]].Add(*NoneItemToAdd);
+		}
+
+	}
+}
+
